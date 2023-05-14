@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for booking in bookings %}
+
+<div class="card my-4">
+  <img class="card-img-top" src="{{ booking.room.image.url }}" alt="{{ booking.room.name }}" style="max-width: 300px;">
+  <div class="card-body">
+    <h4 class="card-title">{{ booking.room.name }}</h4>
+    <h6 class="card-subtitle mb-2 text-muted">{{ booking.room.room_type }}</h6>
+    <p class="card-text">Check-in: {{ booking.check_in|date:"M d, Y" }}</p>
+    <p class="card-text">Check-out: {{ booking.check_out|date:"M d, Y" }}</p>
+    
+    <p class="card-text">Status: {{ booking.status }}</p>
+  </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}

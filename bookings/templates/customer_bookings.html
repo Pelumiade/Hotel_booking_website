@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">Booking List for {{ bookings.0.user.email }}</h1>
+  {% if bookings %}
+    <ul class="list-disc pl-6">
+      {% for booking in bookings %}
+        <li class="mb-2">
+          <span class="font-bold">{{ booking.room.name }}</span> - Number of guest: {{ booking.number_of_guests }} - check in date: {{ booking.check_in|date:"M d, Y" }} to check out: {{ booking.check_out|date:"M d, Y" }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-gray-500 text-lg">No bookings found.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h1 class="mb-4">Current Bookings</h1>
+{% if current_bookings %}
+<div class="row">
+{% for booking in current_bookings %}
+<div class="col-md-4 mb-4">
+<div class="card">
+<div class="card-body">
+<h5 class="card-title">{{ booking.room.name }}</h5>
+<p class="card-text">{{ booking.user.first_name }} {{ booking.user.last_name }}</p>
+<p class="card-text">{{ booking.user.email }}</p>
+<p class="card-text">{{ booking.check_in|date:"M d, Y" }} to {{ booking.check_out|date:"M d, Y" }}</p>
+<a href="{% url 'bookings:release_room' booking.id %}" class="btn btn-danger">Release this room</a>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<p>No current bookings.</p>
+{% endif %}
+
+  <h1 class="mb-4">Past Bookings</h1>
+{% if past_bookings %}
+<div class="row">
+{% for booking in past_bookings %}
+<div class="col-md-4 mb-4">
+<div class="card">
+<div class="card-body">
+<h5 class="card-title">{{ booking.room.name }}</h5>
+<p class="card-text">{{ booking.user.customer_name }}</p>
+<p class="card-text">{{ booking.user.email }}</p>
+<p class="card-text">{{ booking.check_in|date:"M d, Y" }} to {{ booking.check_out|date:"M d, Y" }}</p>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<p>No past bookings.</p>
+{% endif %}
+
+{% endblock %}

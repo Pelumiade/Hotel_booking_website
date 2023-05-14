@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Rooms</h2>
+  <div class="row">
+    {% for room in rooms %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="{{ room.image.url }}" class="card-img-top" alt="{{ room.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ room.name }}</h5>
+            <p class="card-text">{{ room.room_type }}</p>
+            <p class="card-text">{{ room.price }}</p>
+            {% if room.available and room.id not in booked_rooms %}
+                <p class="card-text text-success">Available</p>
+                <a href="{% url 'bookings:booking_create' room.id %}" class="btn btn-primary">Book Now</a>
+            {% else %}
+                <p class="card-text text-danger">Not Available</p>
+            {% endif %}
+
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    {% if not rooms %}
+      <p>No rooms available at this time.</p>
+    {% endif %}
+  </div>
+{% endblock %}

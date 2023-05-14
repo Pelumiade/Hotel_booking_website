@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container my-4">
+    <h1 class="text-center mb-4">Complaint Details</h1>
+    <hr>
+
+    {% for complaints in complaint %}
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="card-title">Subject: {{ complaints.subject }}</h2>
+        <p class="card-subtitle">Status: {{ complaints.status }}</p>
+      </div>
+      <div class="card-body">
+        <p class="card-text">Message: {{ complaints.message }}</p>
+
+        {% if complaints.status == 'pending' %}
+        <a href="{% url 'bookings:complaint_edit' complaints.id %}" class="btn btn-primary">Edit Complaint</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}

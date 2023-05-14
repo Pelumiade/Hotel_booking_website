@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Booking List</h1>
+  {% for booking in bookings %}
+  <div class="card mb-4">
+    <div class="card-header">
+      <h2 class="card-title">{{ booking.room.name }}</h2>
+      <p class="card-subtitle">{{ booking.user.email }}</p>
+      <p class="card-subtitle">{{ booking.status }}</p>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_hidden }}
+        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+        <button type="submit" class="btn btn-success mr-2" name="accept">Accept</button>
+        <button type="submit" class="btn btn-danger" name="reject">Reject</button>
+      </form>
+    </div>
+  </div>
+{% endfor %}
+
+
+{% endblock %}

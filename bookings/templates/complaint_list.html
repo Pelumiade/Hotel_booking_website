@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Complaint List</h1>
+
+  {% if complaints %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Subject</th>
+          <th>Message</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for complaint in complaints %}
+          <tr>
+            <td>{{ complaint.pk }}</td>
+            <td>{{ complaint.subject }}</td>
+            <td>{{ complaint.message }}</td>
+            <td>{{ complaint.status }}</td>
+            <td>{{ complaint.created_at }}</td>
+            <td>{{ complaint.updated_at }}</td>
+            <td>
+              <form method="post" action="{% url 'bookings:admin_complaint_list' %}">
+                {% csrf_token %}
+                <input type="hidden" name="complaint_id" value="{{ complaint.pk }}">
+                {% if complaint.status == 'pending' %}
+                  <button type="submit" name="mark_as_solved">Mark as Solved</button>
+                {% elif complaint.status == 'solved' %}
+                  <button type="submit" name="mark_as_pending">Mark as Pending</button>
+                {% endif %}
+              </form>
+              
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No complaints found.</p>
+  {% endif %}
+
+{% endblock %}

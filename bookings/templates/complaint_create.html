@@ -1,0 +1,61 @@
+<!-- complaint_form.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h1 class="text-center">Your Complaint</h1>
+
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        <form method="post" action="{% url 'bookings:complaint_create' %}?booking_id={{ booking.id }}">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .container {
+      margin-top: 20px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    .messages {
+      list-style: none;
+      margin-bottom: 20px;
+      padding-left: 0;
+    }
+    .messages li {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .messages .alert-success {
+      color: green;
+    }
+    .messages .alert-danger {
+      color: red;
+    }
+    form {
+      margin-top: 20px;
+    }
+    button {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+  </style>
+{% endblock %}

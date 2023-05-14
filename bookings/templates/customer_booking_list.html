@@ -1,0 +1,32 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ customer.username }}'s Bookings</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Room number</th>
+        <th>Customer</th>
+        <th>Check-in date</th>
+        <th>Check-out date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.room.room_number }}</td>
+          <td>{{ booking.customer }}</td>
+          <td>{{ booking.check_in_date }}</td>
+          <td>{{ booking.check_out_date }}</td>
+          <td>{{ booking.status }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No bookings found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Welcome, {{ user.username }}!</h1>
+    <p>This is the Admin Home Page.</p>
+
+    <h2>Current Bookings</h2>
+    <ul>
+        {% for booking in current_bookings %}
+            <li>{{ booking }}</li>
+        {% empty %}
+            <li>No current bookings.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Past Bookings</h2>
+    <ul>
+        {% for booking in past_bookings %}
+            <li>{{ booking }}</li>
+        {% empty %}
+            <li>No past bookings.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Complaints</h2>
+    <ul>
+        {% for complaint in complaints %}
+            <li>{{ complaint }}</li>
+        {% empty %}
+            <li>No complaints.</li>
+        {% endfor %}
+    </ul>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+{% endblock %}

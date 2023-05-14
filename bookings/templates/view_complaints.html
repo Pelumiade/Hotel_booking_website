@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h1>My Complaints</h1>
+        {% if complaints %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Date Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for complaint in complaints %}
+                <tr>
+                  <td><a href="{% url 'complaint_detail' complaint.id %}">{{ complaint.title }}</a></td>
+                  <td>{{ complaint.status }}</td>
+                  <td>{{ complaint.created_at }}</td>
+                </tr>
+              {% endfor %}
+           

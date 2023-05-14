@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container my-5">
+    <h1 class="text-center mb-5">Customer Information</h1>
+    {% if bookings %}
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <ul class="list-group">
+            {% for booking in bookings %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">       
+                <li>Name: {{ booking.customer_name }}</li>
+                <li>Email: {{ booking.user.email }}<li>           
+                
+                <a href="{% url 'bookings:customer_bookings' booking.user.id %}" class="btn btn-primary">View Bookings</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center">No Customer.</p>
+    {% endif %}
+  </div>
+{% endblock %}

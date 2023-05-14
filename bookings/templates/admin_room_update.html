@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Update Room</h1>
+  <hr>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" name="name" class="form-control" value="{{ room.name }}" required>
+    </div>
+    <div class="form-group">
+      <label for="room_type">Type</label>
+      <select name="room_type" class="form-control" required>
+        <option value="standard" {% if rooms.room_type == 'standard' %}selected{% endif %}>Standard</option>
+        <option value="deluxe" {% if rooms.room_type == 'deluxe' %}selected{% endif %}>Deluxe</option>
+        <option value="suite" {% if rooms.room_type == 'suite' %}selected{% endif %}>Suite</option>
+      </select>
+    </div>
+    <div class="form-group">
+        <label for="room_number">Room number</label>
+        <input type="number" name="room_number" class="form-control" value="{{ room.room_number }}" required>
+      </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea name="description" class="form-control">{{ room.description }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" name="price" class="form-control" value="{{ room.price }}" required>
+    </div>
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input type="file" name="image" class="form-control-file">
+      {% if room.image %}
+        <p><img src="{{ rooms.image.url }}" alt="{{ rooms.name }}" width="50"></p>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="available">Available</label>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="available" id="available_yes" value="yes" {% if room.available %}checked{% endif %}>
+        <label class="form-check-label" for="available_yes">
+          Yes
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="available" id="available_no" value="no" {% if not room.available %}checked{% endif %}>
+        <label class="form-check-label" for="available_no">
+          No
+        </label>
+      </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="{% url 'bookings:admin_room_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

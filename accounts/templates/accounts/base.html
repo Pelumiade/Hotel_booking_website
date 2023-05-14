@@ -1,0 +1,13 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Hotel Booking System{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            #<li><a href="{% url 'accounts:login' %}">login</a></li>
+            <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+        </ul>
+    </nav>

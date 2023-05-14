@@ -1,0 +1,29 @@
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2>{{ title }}</h2>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="room">Room</label>
+          <select class="form-control" id="room" name="room">
+            {% for room in rooms %}
+              <option value="{{ room.id }}">{{ room.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="check_in">Check-in Date</label>
+          <input type="date" class="form-control" id="check_in" name="check_in">
+        </div>
+        <div class="form-group">
+          <label for="check_out">Check-out Date</label>
+          <input type="date" class="form-control" id="check_out" name="check_out">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

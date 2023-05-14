@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Rooms</h1>
+  <hr>
+  {% if rooms %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Type</th>
+
+          <th>Description</th>
+          <th>Price</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for room in rooms %}
+          <tr>
+            <td>{{ room.id }}</td>
+            <td>{{ room.name }}</td>
+            <td>{{ room.room_type }}</td>
+           
+            <td>{{ room.description }}</td>
+            <td>${{ room.price }}</td>
+            <td>
+              {% if room.image %}
+                <img src="{{ room.image.url }}" alt="{{ room.name }}" width="50">
+              {% endif %}
+            </td>
+            <td>
+              <form method="POST" action="{% url 'bookings:admin_room_list' %}">
+                {% csrf_token %}
+                <input type="hidden" name="room_id" value="{{ room.id }}">
+                <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
+                
+              </form>
+            <td>
+              <form method="POST" action="">
+                {% csrf_token %}
+                <!-- <input type="hidden" name="room_id" value="{{ room.id }}">
+                <button type="submit" name="update" class="btn btn-primary btn-sm">Update</button> -->
+                <a href="{% url 'bookings:admin_room_update' room.id %}">Update</a>
+
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No rooms available.</p>
+  {% endif %}
+   
+  <hr>
+
+  <h2>Create Room</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"  name="create">Create</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hotelier</title>
+    <style>
+      /* Welcome section styles */
+      section:nth-of-type(1) {
+        background-color: #f2f2f2;
+        padding: 50px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      }
+
+      /* About us section styles */
+      section:nth-of-type(2) {
+        background-color: #fff;
+        padding: 50px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      }
+
+      /* What we offer section styles */
+      section:nth-of-type(3) {
+        background-color: #f2f2f2;
+        padding: 50px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Rooms section styles */
+      section:nth-of-type(4) {
+        padding: 50px;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Card deck styles */
+      .card-deck {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      /* Card styles */
+      .card {
+        flex: 0 0 48%;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Card title styles */
+      .card-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      /* Card text styles */
+      .card-text {
+        margin-bottom: 20px;
+      }
+
+      /* Card image styles */
+      .card img {
+        border-radius: 10px;
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+   <!-- Image -->
+   <img src="{% static 'images/pexels-photo-258154.jpeg' %}" alt="My Image" style="width:100%; height:80%;">
+
+
+    <!-- Welcome Section -->
+    <section>
+      <h1>Welcome to Hotelier</h1>
+      <p>Hotelier is a premium hotel with luxurious rooms and excellent customer service. We provide our guests with the best possible experience, making their stay unforgettable.</p>
+    </section>
+
+    <!-- About Us Section -->
+    <section>
+      <h2>About Us</h2>
+      <p>We are a team of dedicated professionals who are passionate about hospitality. Our mission is to provide our guests with the best possible experience, by offering top-notch facilities, luxurious rooms, and excellent customer service.</p>
+    </section>
+
+    <!-- What We Offer Section -->
+    <section>
+      <h2>What We Offer</h2>
+      <ul>
+        <li>Free Wi-Fi</li>
+        <li>24-hour room service</li>
+        <li>Swimming pool</li>
+        <li>Spa and fitness center</li>
+        <li>Restaurant and bar</li>
+      </ul>
+    </section>
+
+    
+    <!-- Rooms Section -->
+    <section>
+      <h2>Rooms</h2>
+      <div class="card-deck">
+        {% for room in rooms %}
+          <div class="card">
+            <div class="card-body">
+              <!-- <h3 class="card-title">{{ room.name }}</h3> -->
+              <p class="card-text">{{ room.room_type }}</p>
+              
+
+              <p><img src="{{ room.image.url }}" alt="{{ room.name }}"></p>
+              <p class="card-text">{{ room.description }}</p>
+              <p class="card-text"><strong>Price: {{ room.price }}</strong></p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    
+  </body>
+</html>
