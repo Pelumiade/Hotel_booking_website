@@ -191,3 +191,10 @@ class AdminComplaintListAPIView(generics.ListCreateAPIView):
             messages.success(request, 'Complaint marked as pending!')
         serializer = ComplaintSerializer(complaint)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ComplaintDetailView(generics.ListAPIView):
+    serializer_class = ComplaintSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Complaint.objects.filter(user=self.request.user)

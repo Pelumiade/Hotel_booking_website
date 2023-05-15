@@ -9,6 +9,7 @@ urlpatterns = [
     path('complaints/<int:pk>/', ComplaintUpdateView.as_view(), name='complaint_update'),
     path('complaint/', ComplaintList.as_view(), name='complaint-list'),
     path('complaint/<int:pk>/', ComplaintDetail.as_view(), name='complaint-detail'),
+    path('complaint_detail/<int:pk>', ComplaintDetailView.as_view(), name='complaint-detail'),
     path('admin_rooms/', AdminRoomListView.as_view(), name='api_admin_room_list'),
     path('admin_rooms/<int:pk>/', AdminRoomDetailView.as_view(), name='api_admin_room_detail'),
     path('bookings_admin/', AdminBookingListView.as_view(), name='admin_booking_list'),
