@@ -140,7 +140,7 @@ STATIC_FILE = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-MEDIA_URL = 'rooms/'
+MEDIA_URL = '/rooms/'
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'rooms')
 
 LOGIN_REDIRECT_URL = 'home'
