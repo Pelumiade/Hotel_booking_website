@@ -15,7 +15,7 @@ from .serializers import RoomSerializer, ComplaintSerializer, BookingsSerializer
 
 
 class LoginAPIView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -171,30 +171,56 @@ class CustomerBookingsAPIView(generics.ListAPIView):
         return Booking.objects.filter(user_id=user_id)    
     
 
-class AdminComplaintListAPIView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
-    queryset = Complaint.objects.all()
-    serializer_class = ComplaintSerializer
+# class AdminComplaintListAPIView(generics.ListCreateAPIView):
+#     permission_classes = [permissions.IsAuthenticated,]
+#     queryset = Complaint.objects.all()
+#     serializer_class = ComplaintSerializer
     
-    def post(self, request, *args, **kwargs):
-        complaint_id = request.data.get('complaint_id')
-        complaint = get_object_or_404(Complaint, pk=complaint_id)
-        if 'mark_as_solved' in request.data:
+#     def post(self, request, *args, **kwargs):
+#         complaint_id = request.data.get('complaint_id')
+#         complaint = get_object_or_404(Complaint, pk=complaint_id)
+#         if 'mark_as_solved' in request.data:
+#             complaint.status = 'solved'
+#             complaint.admin_user = request.user
+#             complaint.save()
+#             messages.success(request, 'Complaint marked as solved!')
+#         elif 'mark_as_pending' in request.data:
+#             complaint.status = 'pending'
+#             complaint.admin_user = request.user
+#             complaint.save()
+#             messages.success(request, 'Complaint marked as pending!')
+#         serializer = ComplaintSerializer(complaint)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class AdminComplaintListAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    def post(self, request, pk):
+        complaint = get_object_or_404(Complaint, pk=pk)
+
+        if 'mark_as_solved' in request.POST:
             complaint.status = 'solved'
             complaint.admin_user = request.user
             complaint.save()
-            messages.success(request, 'Complaint marked as solved!')
-        elif 'mark_as_pending' in request.data:
+            return Response({'detail': 'Complaint marked as solved!'})
+        elif 'mark_as_pending' in request.POST:
             complaint.status = 'pending'
             complaint.admin_user = request.user
             complaint.save()
-            messages.success(request, 'Complaint marked as pending!')
-        serializer = ComplaintSerializer(complaint)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({'detail': 'Complaint marked as pending!'})
+        else:
+            return Response({'detail': 'Invalid request'}, status=status.HTTP_400_BAD_REQUEST)    
 
-class ComplaintDetailView(generics.ListAPIView):
+class ComplaintDetailView(APIView):
     serializer_class = ComplaintSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Complaint.objects.filter(user=self.request.user)
+    
+class RoomListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, admin_user=self.request.user)

@@ -16,11 +16,7 @@ class ComplaintForm(forms.ModelForm):
         model = Complaint
         fields = ['subject', 'message']
 
-    
-class RoomForm(forms.ModelForm):
-    class Meta:
-        model = Room
-        fields = ['room_number', 'room_type', 'price']
+
 
 
 class LoginForm(forms.Form):
@@ -53,6 +49,7 @@ class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = ['name', 'room_type', 'room_number', 'description', 'price', 'image', 'available']
+        
 
 class RoomDeleteForm(forms.Form):
     room_id = forms.IntegerField(widget=forms.HiddenInput)

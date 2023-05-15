@@ -40,18 +40,25 @@ def room_list(request):
             booked_rooms.remove(room_id)
     return render(request, 'room_list.html', {'rooms': rooms, 'booked_rooms': booked_rooms})
 
+
 # ADMIN: DELETE & CREATE ROOMS
 @login_required
 def admin_room_list(request):
     rooms = Room.objects.all()
+    form = RoomForm(request.POST, request.FILES)
 
     if request.method == 'POST':
         if 'create' in request.POST:
-            form = RoomForm(request.POST, request.FILES)
+            form = RoomForm(request.POST, request.FILE)
+            print(request.POST)
+            print(request.FILES)
             if form.is_valid():
+                print(form.files)
                 room = form.save(commit=False)
                 room.admin_user = request.user
                 room.user_id = request.user.id
+                # picture = form.cleaned_data['image']
+                # room.image = picture
                 room.save()
                 messages.success(request, 'Room created successfully.')
             else:
@@ -85,6 +92,7 @@ def admin_room_update(request, room_id):
     if request.method == 'POST':
         form = RoomForm(request.POST, request.FILES, instance=room)
         if form.is_valid():
+            print(form.files)
             form.save()
             messages.success(request, 'Room updated successfully.')
             return redirect('bookings:admin_room_list')
@@ -93,7 +101,30 @@ def admin_room_update(request, room_id):
     else:
         form = RoomForm(instance=room)
 
-    return render(request, 'admin_room_update.html', {'form': form, 'room': room})
+    return render(request, 'admin_room_update.html', {'room': room, 'form': form, })
+
+#ADMIN: ROOM CREATE
+@login_required
+def admin_room_create(request):
+
+    form = RoomForm(request.POST, request.FILES)
+    if request.method == 'POST':
+        form = RoomForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            print(form.files)
+            room = form.save(commit=False)
+            room.admin_user = request.user
+            room.user_id = request.user.id
+            room.save()
+            messages.success(request, 'Room created successfully.')
+            return redirect('bookings:admin_room_list')
+        else:
+            messages.error(request, 'Error creating room.')
+    else:
+        form = RoomForm()
+
+    return render(request, 'admin_room_create.html', {'form': form})
 
 #CUSTOMERS: TO BOOK ROOMS
 @login_required

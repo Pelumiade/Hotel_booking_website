@@ -323,7 +323,24 @@
       <p>Hotelier is a premium hotel with luxurious rooms and excellent customer service. We provide our guests with the best possible experience, making their stay unforgettable.</p>
     </section>
 
-    
+    <!-- Rooms Section -->
+    <section>
+      <h2>Rooms</h2>
+      <div class="card-deck">
+        {% for room in rooms %}
+          <div class="card">
+            <div class="card-body">
+              <!-- <h3 class="card-title">{{ room.name }}</h3> -->
+              <p class="card-text">{{ room.room_type }}</p>
+
+              <p><img src="{{ room.image.url }}" alt="{{ room.name }}"></p>
+              <p class="card-text">{{ room.description }}</p>
+              <p class="card-text"><strong>Price: {{ room.price }}</strong></p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
     
     <footer>
       <div class="about-us">
