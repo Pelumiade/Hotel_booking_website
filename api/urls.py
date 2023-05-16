@@ -17,6 +17,11 @@ urlpatterns = [
     path('booked_rooms/', BookedRoomsList.as_view(), name='booked_rooms_list_api'),
     path('complaints_list/', AdminComplaintListAPIView.as_view(), name='admin_complaint_list'),
     path('rooms_create/', RoomListCreateAPIView.as_view(), name='room-list-create'),
+    path('rooms/update/<int:pk>/', RoomUpdateView.as_view(), name='room-update'),
+    path('rooms/delete/<int:pk>/', RoomDeleteView.as_view(), name='room-delete'),
+    path('bookings/<int:pk>/accept/', BookingAcceptAPIView.as_view(), name='booking_accept'),
+    path('bookings/<int:pk>/reject/', BookingRejectAPIView.as_view(), name='booking_reject'),
+    path('bookings/<int:pk>/release/', ReleaseRoomAPIView.as_view(), name='api-release-room'),
 ]
 
 

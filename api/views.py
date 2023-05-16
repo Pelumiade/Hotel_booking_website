@@ -1,12 +1,17 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
 from rest_framework import generics, permissions, serializers
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
+from rest_framework import status
+from django.http import JsonResponse
+
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
@@ -217,10 +222,100 @@ class ComplaintDetailView(APIView):
     def get_queryset(self):
         return Complaint.objects.filter(user=self.request.user)
     
-class RoomListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Room.objects.all()
+# class RoomListCreateAPIView(generics.ListCreateAPIView):
+#     queryset = Room.objects.all()
+#     serializer_class = RoomSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user, admin_user=self.request.user)
+
+
+
+class RoomListCreateAPIView(generics.CreateAPIView):
     serializer_class = RoomSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, admin_user=self.request.user)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, admin_user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RoomUpdateView(generics.UpdateAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user, admin_user=self.request.user)
+
+
+class RoomDeleteView(generics.DestroyAPIView):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        room = get_object_or_404(Room, pk=pk)
+        room.delete()
+        message = {'detail': 'Room deleted successfully.'}
+        return Response(message, status=status.HTTP_204_NO_CONTENT)
+    
+
+class BookingAcceptAPIView(generics.UpdateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+    def put(self, request, *args, **kwargs):
+        booking = self.get_object()
+        booking.status = 'accepted'
+        booking.save()
+        # send email notification to customer
+        send_mail(
+            'Booking Accepted',
+            'Your booking has been accepted!',
+            'fecoyifemi@gmail',  # sender's email
+            [booking.customer_email],  # recipient's email
+            fail_silently=False,
+        )
+        return Response({'message': 'Booking accepted.'}, status=status.HTTP_200_OK)
+    
+class BookingRejectAPIView(generics.UpdateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+    def put(self, request, *args, **kwargs):
+        booking = self.get_object()
+        booking.status = 'rejected'
+        booking.save()
+
+        # send email notification to customer
+        send_mail(
+            'Booking Rejected',
+            'Sorry, your booking has been rejected.',
+            'fecoyifemi@gmail.com',  # sender's email
+            [booking.customer_email],  # recipient's email
+            fail_silently=False,
+        )
+
+        return Response({'message': 'Booking rejected.'}, status=status.HTTP_200_OK)
+    
+class ReleaseRoomAPIView(generics.DestroyAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        booking = self.get_object()
+        booking.room.available = True
+        booking.room.save()
+        booking.delete()
+        return JsonResponse({'message': 'Room released successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    
