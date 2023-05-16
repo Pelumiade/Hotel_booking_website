@@ -296,7 +296,7 @@ def signup(request):
             login(request, user)
             return redirect('bookings:login')
     else:
-        form = CustomerSignUpForm()
+        form = CustomerCreationForm()
     return render(request, 'signup.html', {'form': form})
 
 
