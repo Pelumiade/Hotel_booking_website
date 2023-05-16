@@ -22,6 +22,9 @@ urlpatterns = [
     path('bookings/<int:pk>/accept/', BookingAcceptAPIView.as_view(), name='booking_accept'),
     path('bookings/<int:pk>/reject/', BookingRejectAPIView.as_view(), name='booking_reject'),
     path('bookings/<int:pk>/release/', ReleaseRoomAPIView.as_view(), name='api-release-room'),
+    path('complaints_solved/<int:pk>/', ComplaintUpdateAPIView.as_view(), name='complaint-update-api'),
+    path('bookings/create/<int:id>/', BookingCreateAPIView.as_view(), name='booking_create'),
 ]
+
 
 

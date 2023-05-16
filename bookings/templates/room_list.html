@@ -10,7 +10,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ room.name }}</h5>
             <p class="card-text">{{ room.room_type }}</p>
-            <p class="card-text">{{ room.price }}</p>
+            <p class="card-text">${{ room.price }}</p>
             {% if room.available and room.id not in booked_rooms %}
                 <p class="card-text text-success">Available</p>
                 <a href="{% url 'bookings:booking_create' room.id %}" class="btn btn-primary">Book Now</a>

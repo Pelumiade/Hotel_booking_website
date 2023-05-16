@@ -3,12 +3,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from django.forms import DateInput
 from .models import Booking, Complaint, Room
 
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ['customer_name', 'customer_email', 'check_in', 'check_out', 'number_of_guests']
+
+        widgets = {
+            'check_in': DateInput(attrs={'type': 'date'}),
+            'check_out': DateInput(attrs={'type': 'date'}),
+        }
 
 
 class ComplaintForm(forms.ModelForm):

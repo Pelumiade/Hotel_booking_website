@@ -11,12 +11,11 @@ from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from rest_framework import status
 from django.http import JsonResponse
-
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
 from bookings.models import Room, Booking, Complaint
-from .serializers import RoomSerializer, ComplaintSerializer, BookingsSerializer, BookingCreateSerializer, BookingSerializer, LoginSerializer
+from .serializers import RoomSerializer, ComplaintSerializer, BookingsSerializer, BookingCreateSerializer, BookingSerializer, LoginSerializer, BookSerializer, ComplaintCreateSerializer
 
 
 class LoginAPIView(APIView):
@@ -319,3 +318,47 @@ class ReleaseRoomAPIView(generics.DestroyAPIView):
         booking.delete()
         return JsonResponse({'message': 'Room released successfully.'}, status=status.HTTP_204_NO_CONTENT)
     
+class ComplaintUpdateAPIView(generics.UpdateAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintSerializer
+    permission_classes = [permissions.IsAdminUser]
+    def put(self, request, *args, **kwargs):
+        complaint = self.get_object()
+        complaint_id = kwargs.get('pk')
+        if 'mark_as_solved' in request.data:
+            complaint.status = 'solved'
+            complaint.admin_user = request.user
+            complaint.save()
+            return Response({'message': f'Complaint {complaint_id} marked as solved.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+# class BookingCreateAPIView(generics.CreateAPIView):
+#     queryset = Booking.objects.all()
+#     serializer_class = BookSerializer
+
+#     def post(self, request, *args, **kwargs):
+#         room_id = kwargs.get('id')
+#         room = get_object_or_404(Room, id=room_id)
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         booking = serializer.save(user=request.user, room=room)
+#         booking.save()
+#         return Response({'message': 'Your booking has been created.'}, status=status.HTTP_201_CREATED)
+class BookingCreateAPIView(generics.CreateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        booking = serializer.save()
+        return Response({'message': 'Your booking has been created.'}, status=status.HTTP_201_CREATED)
+    
+class ComplaintCreateAPIView(generics.CreateAPIView):
+    queryset = Complaint.objects.all()
+    serializer_class = ComplaintSerializer
+
+    def perform_create(self, serializer):
+        booking_id = self.kwargs['booking_id']
+        serializer.save(user=self.request.user, booking_id=booking_id)
