@@ -84,7 +84,7 @@ def admin_room_list(request):
 
     return render(request, 'admin_room_list.html', {'rooms': rooms, 'form': form})
 
-#ADMIN: ROOM UPDATE
+##ADMIN: ROOM UPDATE
 @login_required
 def admin_room_update(request, room_id):
     room = get_object_or_404(Room, pk=room_id)
